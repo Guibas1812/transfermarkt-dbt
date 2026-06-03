@@ -43,6 +43,13 @@ The project follows the standard dbt layered architecture:
         ├── fct_player_match.sql
         ├── fct_player_season.sql
         └── fct_players_transfers.sql
+
+📁 tests/
+├── assert_appearances_have_valid_player.sql
+├── assert_attendance_not_exceed_capacity.sql
+├── assert_net_transfer_balance_calculation.sql
+├── assert_player_age_reasonable.sql
+└── assert_transfer_fee_non_negative.sql
 ```
 
 ---
