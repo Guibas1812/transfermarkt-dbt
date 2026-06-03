@@ -1,38 +1,78 @@
 # Transfermarkt dbt Project
 
+![dbt](https://img.shields.io/badge/dbt-FF694B?style=flat&logo=dbt&logoColor=white)
+![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=flat&logo=snowflake&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat&logo=postgresql&logoColor=white)
+
 A dbt project built on top of the [Transfermarkt dataset from Kaggle](https://www.kaggle.com/datasets/davidcariboo/player-scores), loaded into Snowflake. The goal is to model raw football data into clean, analysis-ready tables following analytics engineering best practices.
+
+---
 
 ## Project Structure
 
 The project follows the standard dbt layered architecture:
 
-- **Staging** — one model per source table, renaming and light cleaning only
-- **Intermediate** — business logic and joins, not exposed to end users
+```
+📁 models/
+├── 📁 staging/
+│   └── 📁 transfermarkt/
+│       ├── stg_transfermarkt__appearances.sql
+│       ├── stg_transfermarkt__club_games.sql
+│       ├── stg_transfermarkt__clubs.sql
+│       ├── stg_transfermarkt__competitions.sql
+│       ├── stg_transfermarkt__game_events.sql
+│       ├── stg_transfermarkt__game_lineups.sql
+│       ├── stg_transfermarkt__games.sql
+│       ├── stg_transfermarkt__player_valuations.sql
+│       ├── stg_transfermarkt__players.sql
+│       └── stg_transfermarkt__transfers.sql
+├── 📁 intermediate/
+│   └── 📁 club_analysis/
+│       ├── int_clubs_attendance_summary.sql
+│       ├── int_clubs_enriched.sql
+│       ├── int_clubs_transfer_info.sql
+│       ├── int_games_info.sql
+│       ├── int_league_games_only.sql
+│       └── int_player_match_stats.sql
+└── 📁 marts/
+    └── 📁 club_analysis/
+        ├── dim_clubs.sql
+        ├── dim_competitions.sql
+        ├── dim_players.sql
+        ├── fct_clubs_performance.sql
+        ├── fct_player_match.sql
+        ├── fct_player_season.sql
+        └── fct_players_transfers.sql
+```
+
+---
+
+## Layers
+
+- **Staging** — one model per source table, renaming and light cleaning only, materialized as views
+- **Intermediate** — business logic and joins, not exposed to end users, materialized as views
 - **Marts** — final dimensional and fact tables, materialized as tables for query performance
 
-## Models
+---
 
-### Staging
-10 staging models covering clubs, players, games, appearances, transfers, game events, lineups, competitions, club games, and player valuations.
+## Marts Overview
 
-### Intermediate
-- `int_clubs_enriched` — clubs joined with competition/country data
-- `int_clubs_transfer_info` — transfer income and spend per club per season
-- `int_clubs_attendance_summary` — home game attendance aggregated at club level
-- `int_games_info` — games with competition type context
-- `int_league_games_only` — filtered to league games only
-- `int_player_match_stats` — player appearance stats joined with game context
+| Model | Type | Description |
+|---|---|---|
+| `dim_clubs` | Dimension | Club attributes with competition and country data |
+| `dim_players` | Dimension | Player profiles with calculated age |
+| `dim_competitions` | Dimension | Competition reference table |
+| `fct_clubs_performance` | Fact | Transfer activity and attendance aggregated per club |
+| `fct_players_transfers` | Fact | Transfer history at player level |
+| `fct_player_match` | Fact | Player stats at match level |
+| `fct_player_season` | Fact | Player stats by season including goals/assists/minutes per 90 |
 
-### Marts
-- `dim_clubs` — club dimension with competition and country attributes
-- `dim_players` — player dimension with calculated age
-- `dim_competitions` — competition reference table
-- `fct_clubs_performance` — one row per club, aggregating transfer activity and attendance across all seasons
-- `fct_players_transfers` — transfer history at player level
-- `fct_player_match` — player stats at match level
-- `fct_player_season` — player stats aggregated by season, including goals/assists/minutes per 90
+---
 
 ## Tech Stack
-- **Source data**: Kaggle (Transfermarkt)
-- **Data warehouse**: Snowflake
-- **Transformation**: dbt Cloud
+
+| Tool | Purpose |
+|---|---|
+| Snowflake | Data warehouse |
+| dbt Cloud | Transformation and modeling |
+| Kaggle (Transfermarkt) | Source data |
