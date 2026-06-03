@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: dim_competitions
+    description: >
+      Competition dimension table containing static descriptive attributes
+      for all competitions in the dataset. One row per competition.
+      Intended to be joined to fact tables and dim_clubs via competition_id.
+    config:
+      materialized: table
+    columns:
+      - name: competition_id
+        description: Primary key. Unique identifier for the competition.
+        tests:
+          - unique
+          - not_null
+
+      - name: competition_code
+        description: Short code identifier for the competition.
+
+      - name: competition_name
+        description: Official name of the competition.
+        tests:
+          - not_null
+
+      - name: sub_type
+        description: Sub-type of the competition (e.g. first_division, second_division).
+
+      - name: type
+        description: Broad type of the competition (e.g. domestic_league, international).
+
+      - name: country_id
+        description: Identifier for the country the competition belongs to.
+
+      - name: country_name
+        description: Name of the country the competition belongs to.
+
+      - name: domestic_league_code
+        description: Code used to identify the domestic league.
+
+      - name: confederation
+        description: Continental confederation the competition belongs to (e.g. UEFA, CONMEBOL).
+
+      - name: is_top_5_league
+        description: >
+          Boolean flag indicating whether this competition is one of the
+          top 5 European leagues (Premier League, La Liga, Bundesliga,
+          Serie A, Ligue 1).

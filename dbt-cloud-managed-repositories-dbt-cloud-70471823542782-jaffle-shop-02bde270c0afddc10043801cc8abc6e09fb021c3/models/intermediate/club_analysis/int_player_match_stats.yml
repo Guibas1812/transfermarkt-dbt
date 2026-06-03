@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: int_player_match_stats
+    description: >
+      One row per player appearance. Feeds from stg_transfermarkt__appearances
+      with an additional season column derived from the match date. Season runs
+      from August to July (e.g. Aug 2023 - Jul 2024 = 23/24).
+    config:
+      materialized: view
+    columns:
+      - name: appearance_id
+        description: Primary key. Unique identifier for the appearance.
+        tests:
+          - unique
+          - not_null
+
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+
+      - name: player_id
+        description: Unique identifier for the player.
+        tests:
+          - not_null
+
+      - name: player_club_id
+        description: Identifier of the club the player represented in this appearance.
+
+      - name: player_current_club_id
+        description: Identifier of the club the player currently belongs to.
+
+      - name: date
+        description: Date the match was played (yyyy-mm-dd).
+
+      - name: season
+        description: >
+          Season derived from the match date in YY/YY format (e.g. 23/24).
+          Season starts in August — matches from August onwards belong to the
+          season starting that year; matches before August belong to the season
+          that started the previous year.
+
+      - name: player_name
+        description: Full name of the player.
+
+      - name: competition_id
+        description: Unique identifier for the competition.
+
+      - name: yellow_cards
+        description: Number of yellow cards received by the player in this appearance.
+
+      - name: red_cards
+        description: Number of red cards received by the player in this appearance.
+
+      - name: goals
+        description: Number of goals scored by the player in this appearance.
+
+      - name: assists
+        description: Number of assists made by the player in this appearance.
+
+      - name: minutes_played
+        description: Number of minutes played by the player in this appearance.

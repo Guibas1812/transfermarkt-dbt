@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: dim_players
+    description: >
+      One row per player. Player dimension table derived from
+      stg_transfermarkt__players. Contains biographical, physical and
+      financial attributes. Age is calculated dynamically from date_of_birth
+      at query time using current_date().
+    config:
+      materialized: table
+    columns:
+      - name: player_id
+        description: Primary key. Unique identifier for the player.
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: First name of the player.
+
+      - name: last_name
+        description: Last name of the player.
+
+      - name: name
+        description: Full name of the player.
+
+      - name: last_season
+        description: Last season the player was active.
+
+      - name: player_code
+        description: Transfermarkt player code used in URLs.
+
+      - name: country_of_birth
+        description: Country where the player was born.
+
+      - name: city_of_birth
+        description: City where the player was born.
+
+      - name: country_of_citizenship
+        description: Country of citizenship of the player.
+
+      - name: date_of_birth
+        description: Date of birth of the player (yyyy-mm-dd).
+
+      - name: age
+        description: >
+          Age of the player in years, calculated dynamically from
+          date_of_birth using current_date() at query time.
+
+      - name: sub_position
+        description: Specific sub-position of the player (e.g. Centre-Forward, Left Winger).
+
+      - name: position
+        description: General position of the player (e.g. Attack, Midfield, Defence).
+
+      - name: foot
+        description: Preferred foot of the player (left, right or both).
+
+      - name: height_in_cm
+        description: Height of the player in centimetres.
+
+      - name: contract_expiration_date
+        description: Date when the player's current contract expires.
+
+      - name: agent_name
+        description: Name of the player's agent.
+
+      - name: market_value_in_eur
+        description: Current estimated market value of the player in EUR.
+
+      - name: highest_market_value_in_eur
+        description: Highest market value ever recorded for the player in EUR.

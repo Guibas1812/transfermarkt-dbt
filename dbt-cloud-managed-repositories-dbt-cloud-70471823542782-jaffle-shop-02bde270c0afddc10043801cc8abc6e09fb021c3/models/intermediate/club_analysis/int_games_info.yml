@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: int_games_info
+    description: >
+      One row per game. Feeds from stg_transfermarkt__games with the original
+      season column replaced by a derived season from the match date.
+      Season runs from August to July (e.g. Aug 2023 - Jul 2024 = 23/24).
+    config:
+      materialized: view
+    columns:
+      - name: game_id
+        description: Primary key. Unique identifier for the game.
+        tests:
+          - unique
+          - not_null
+
+      - name: competition_id
+        description: Unique identifier for the competition.
+
+      - name: round
+        description: Round or matchday of the game within the competition.
+
+      - name: date
+        description: Date the game was played (yyyy-mm-dd).
+
+      - name: home_club_id
+        description: Unique identifier for the home club.
+
+      - name: away_club_id
+        description: Unique identifier for the away club.
+
+      - name: home_club_goals
+        description: Number of goals scored by the home club.
+
+      - name: away_club_goals
+        description: Number of goals scored by the away club.
+
+      - name: home_club_position
+        description: League position of the home club at the time of the game.
+
+      - name: away_club_position
+        description: League position of the away club at the time of the game.
+
+      - name: home_club_manager_name
+        description: Name of the home club manager at the time of the game.
+
+      - name: away_club_manager_name
+        description: Name of the away club manager at the time of the game.
+
+      - name: stadium
+        description: Name of the stadium where the game was played.
+
+      - name: attendance
+        description: Number of spectators attending the game.
+
+      - name: referee
+        description: Name of the referee officiating the game.
+
+      - name: url
+        description: URL to the game page on Transfermarkt.
+
+      - name: home_club_formation
+        description: Tactical formation used by the home club.
+
+      - name: away_club_formation
+        description: Tactical formation used by the away club.
+
+      - name: home_club_name
+        description: Name of the home club.
+
+      - name: away_club_name
+        description: Name of the away club.
+
+      - name: aggregate
+        description: Aggregate score for two-legged ties.
+
+      - name: competition_type
+        description: Type of competition (e.g. domestic league, cup, international).
+
+      - name: season
+        description: >
+          Season derived from the match date in YY/YY format (e.g. 23/24).
+          Season starts in August — matches from August onwards belong to the
+          season starting that year; matches before August belong to the season
+          that started the previous year. Replaces the original season column
+          from stg_transfermarkt__games.

@@ -1,0 +1,43 @@
+models:
+  - name: int_clubs_transfer_info
+    description: >
+      One row per club per season. Aggregates transfer income, spend and player
+      movement from stg_transfermarkt__transfers. Transfer fee nulls (loans, free
+      transfers) are treated as 0. income_vs_market_value and spend_vs_market_value
+      reflect talent efficiency, not pure cash flow.
+    columns:
+      - name: season
+        description: The transfer season (e.g. 2022/2023).
+
+      - name: club_id
+        description: Unique identifier for the club.
+
+      - name: total_transfer_income
+        description: >
+          Sum of transfer fees received by the club for outgoing players.
+          Null fees (loans, free transfers) are counted as 0.
+
+      - name: income_vs_market_value
+        description: >
+          total_transfer_income minus the sum of market values of outgoing players.
+          Positive means the club sold above market value; negative means below.
+
+      - name: total_transfer_spend
+        description: >
+          Sum of transfer fees paid by the club for incoming players.
+          Null fees (loans, free transfers) are counted as 0.
+
+      - name: spend_vs_market_value
+        description: >
+          total_transfer_spend minus the sum of market values of incoming players.
+          Positive means the club bought above market value; negative means below.
+
+      - name: players_acquired
+        description: >
+          Number of players arriving at the club in the season, including
+          loans and free transfers.
+
+      - name: players_sold
+        description: >
+          Number of players leaving the club in the season, including
+          loans and free transfers.

@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: int_clubs_attendance_summary
+    description: >
+      Club-level attendance summary derived from domestic league games only.
+      One row per club. Aggregates attendance data from int_league_games_only
+      and enriches with stadium capacity from int_clubs_enriched.
+      Used as a building block for club performance mart models.
+    config:
+      materialized: view
+    columns:
+      - name: club_id
+        description: Primary key. Unique identifier for the club.
+        tests:
+          - unique
+          - not_null
+
+      - name: total_home_games
+        description: >
+          Total number of distinct home league games played by the club
+          where attendance data is available.
+        tests:
+          - not_null
+
+      - name: avg_attendance
+        description: >
+          Average attendance per home league game.
+          Calculated as total_attendance / total_home_games.
+          Rounded to the nearest integer.
+
+      - name: stadium_seats
+        description: Total seating capacity of the club's home stadium.
+
+      - name: avg_attendance_pct
+        description: >
+          Average attendance as a percentage of stadium capacity.
+          Calculated as avg_attendance / stadium_seats * 100.
+          Rounded to 2 decimal places. Null if stadium_seats is 0 or null.

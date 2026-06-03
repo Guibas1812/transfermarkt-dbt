@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: int_league_games_only
+    description: >
+      Filtered subset of games containing only domestic league matches.
+      One row per game. Excludes cup, playoff, and international competition games.
+      Used as the base for all league-level game analysis downstream.
+    config:
+      materialized: view
+    columns:
+      - name: game_id
+        description: Primary key. Unique identifier for the game.
+        tests:
+          - unique
+          - not_null
+
+      - name: competition_id
+        description: Foreign key to the domestic competition this game belongs to.
+        tests:
+          - not_null
+
+      - name: season
+        description: Season in which the game was played (e.g. 2021).
+        tests:
+          - not_null
+
+      - name: round
+        description: Round or matchday of the game within the season.
+
+      - name: date
+        description: Date the game was played.
+
+      - name: home_club_id
+        description: Foreign key to the home club.
+        tests:
+          - not_null
+
+      - name: away_club_id
+        description: Foreign key to the away club.
+        tests:
+          - not_null
+
+      - name: home_club_goals
+        description: Number of goals scored by the home club.
+
+      - name: away_club_goals
+        description: Number of goals scored by the away club.
+
+      - name: home_club_position
+        description: League table position of the home club at the time of the game.
+
+      - name: away_club_position
+        description: League table position of the away club at the time of the game.
+
+      - name: home_club_manager_name
+        description: Name of the home club's manager at the time of the game.
+
+      - name: away_club_manager_name
+        description: Name of the away club's manager at the time of the game.
+
+      - name: home_club_formation
+        description: Tactical formation used by the home club.
+
+      - name: away_club_formation
+        description: Tactical formation used by the away club.
+
+      - name: home_club_name
+        description: Name of the home club.
+
+      - name: away_club_name
+        description: Name of the away club.
+
+      - name: stadium
+        description: Name of the stadium where the game was played.
+
+      - name: attendance
+        description: Number of spectators attending the game.
+
+      - name: referee
+        description: Name of the referee who officiated the game.
+
+      - name: aggregate
+        description: Aggregate score if the game is part of a two-legged tie.
+
+      - name: competition_type
+        description: >
+          Type of competition. Always 'domestic_league' in this model
+          as non-league games are filtered out.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['domestic_league']

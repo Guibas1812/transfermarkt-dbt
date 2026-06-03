@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_clubs
+    description: >
+      Club dimension table containing only static descriptive attributes.
+      One row per club. Intended to be joined to fact tables via club_id.
+    config:
+      materialized: table
+    columns:
+      - name: club_id
+        description: Primary key. Unique identifier for the club (from Transfermarkt).
+        tests:
+          - unique
+          - not_null
+
+      - name: competition_id
+        description: Foreign key to the club's domestic competition.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_competitions')
+                field: competition_id
+
+      - name: club_name
+        description: Official name of the club.
+        tests:
+          - not_null
+
+      - name: club_code
+        description: Short code identifier for the club.
+
+      - name: stadium_name
+        description: Name of the club's home stadium.
+
+      - name: stadium_seats
+        description: Total seating capacity of the club's home stadium.
+
+      - name: country_name
+        description: Country the club is based in, derived from the domestic competition.
+
+      - name: confederation
+        description: Continental confederation the club belongs to (e.g. UEFA, CONMEBOL).
+
+      - name: is_top_5_league
+        description: >
+          Boolean flag indicating whether the club plays in one of the
+          top 5 European leagues (Premier League, La Liga, Bundesliga,
+          Serie A, Ligue 1).

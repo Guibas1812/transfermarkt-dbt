@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: fct_player_season
+    description: >
+      One row per player per season per competition. Aggregate fact table
+      derived directly from int_player_match_stats and int_games_info.
+      Pre-aggregates match-level stats to season level for dashboard
+      consumption. For match-level granularity use fct_player_match instead.
+      Intentionally does not depend on fct_player_match to keep the DAG clean.
+    config:
+      materialized: table
+    columns:
+      - name: player_id
+        description: Unique identifier for the player.
+        tests:
+          - not_null
+
+      - name: player_name
+        description: Full name of the player.
+
+      - name: player_club_id
+        description: Identifier of the club the player represented during the season.
+
+      - name: season
+        description: Season in YY/YY format (e.g. 23/24).
+        tests:
+          - not_null
+
+      - name: competition_id
+        description: Unique identifier for the competition.
+        tests:
+          - not_null
+
+      - name: competition_type
+        description: Type of competition (e.g. domestic league, cup, international).
+
+      - name: total_appearances
+        description: Total number of appearances by the player in the season and competition.
+
+      - name: total_goals
+        description: Total goals scored by the player in the season and competition.
+
+      - name: total_assists
+        description: Total assists made by the player in the season and competition.
+
+      - name: total_minutes_played
+        description: Total minutes played by the player in the season and competition.
+
+      - name: total_yellow_cards
+        description: Total yellow cards received by the player in the season and competition.
+
+      - name: total_red_cards
+        description: Total red cards received by the player in the season and competition.
+
+      - name: goals_per_90
+        description: >
+          Goals scored per 90 minutes played.
+          Calculated as total_goals / total_minutes_played * 90.
+          Rounded to 2 decimal places. Null if total_minutes_played is 0.
+
+      - name: assists_per_90
+        description: >
+          Assists made per 90 minutes played.
+          Calculated as total_assists / total_minutes_played * 90.
+          Rounded to 2 decimal places. Null if total_minutes_played is 0.
+
+      - name: goal_contributions_per_90
+        description: >
+          Goals and assists combined per 90 minutes played.
+          Calculated as (total_goals + total_assists) / total_minutes_played * 90.
+          Rounded to 2 decimal places. Null if total_minutes_played is 0.

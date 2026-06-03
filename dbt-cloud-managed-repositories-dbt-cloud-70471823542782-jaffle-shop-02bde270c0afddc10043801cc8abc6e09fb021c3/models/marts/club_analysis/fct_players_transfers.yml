@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: fct_players_transfers
+    description: >
+      One row per transfer. Lists all player transfers enriched with fee vs
+      market value delta. Feeds directly from stg_transfermarkt__transfers.
+      Transfer fee nulls (loans, free transfers) are treated as 0.
+    config:
+      materialized: table
+    columns:
+      - name: transfer_id
+        description: Primary key. Surrogate key generated from player_id, transfer_date, from_club_id and to_club_id.
+        tests:
+          - unique
+          - not_null
+
+      - name: player_id
+        description: Unique identifier for the player.
+        tests:
+          - not_null
+
+      - name: player_name
+        description: Full name of the player.
+
+      - name: transfer_date
+        description: Date the transfer was completed.
+
+      - name: transfer_season
+        description: Season in which the transfer took place (e.g. 2022/2023).
+
+      - name: from_club_id
+        description: Unique identifier of the club the player transferred from.
+
+      - name: from_club_name
+        description: Name of the club the player transferred from.
+
+      - name: to_club_id
+        description: Unique identifier of the club the player transferred to.
+
+      - name: to_club_name
+        description: Name of the club the player transferred to.
+
+      - name: transfer_fee
+        description: >
+          Fee paid for the transfer in EUR.
+          Null fees (loans, free transfers) are treated as 0.
+
+      - name: market_value_in_eur
+        description: Market value of the player at the time of transfer in EUR.
+
+      - name: fee_vs_market_value
+        description: >
+          transfer_fee minus market_value_in_eur.
+          Negative means the buying club acquired the player below market value (good deal);
+          positive means they overpaid.

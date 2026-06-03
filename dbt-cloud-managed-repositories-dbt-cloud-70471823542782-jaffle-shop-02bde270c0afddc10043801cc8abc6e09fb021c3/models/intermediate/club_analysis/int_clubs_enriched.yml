@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: int_clubs_enriched
+    description: >
+      Enriched club model combining all club attributes from the clubs staging
+      table with competition and country context from the competitions staging
+      table. One row per club. Serves as the single trusted source for club
+      attributes used by dim_clubs and int_clubs_attendance_summary.
+    config:
+      materialized: view
+    columns:
+      - name: club_id
+        description: Primary key. Unique identifier for the club.
+        tests:
+          - unique
+          - not_null
+
+      - name: club_code
+        description: Short code identifier for the club.
+
+      - name: domestic_competition_id
+        description: Foreign key to the club's domestic competition.
+        tests:
+          - not_null
+
+      - name: club_name
+        description: Official name of the club.
+        tests:
+          - not_null
+
+      - name: total_market_value
+        description: Total market value of the club's squad in EUR.
+
+      - name: squad_size
+        description: Total number of players in the club's squad.
+
+      - name: average_age
+        description: Average age of players in the club's squad.
+
+      - name: foreigners_number
+        description: Number of foreign players in the club's squad.
+
+      - name: foreigners_percentage
+        description: Percentage of foreign players in the club's squad.
+
+      - name: national_team_players
+        description: Number of players currently called up to a national team.
+
+      - name: stadium_name
+        description: Name of the club's home stadium.
+
+      - name: stadium_seats
+        description: Total seating capacity of the club's home stadium.
+
+      - name: net_transfer_record
+        description: >
+          Net transfer record as reported by Transfermarkt.
+          Positive = net income, negative = net spend.
+
+      - name: coach_name
+        description: Name of the club's current head coach.
+
+      - name: last_season
+        description: Most recent season the club was active in the dataset.
+
+      - name: filename
+        description: Source filename from the raw data extract.
+
+      - name: url
+        description: Transfermarkt URL for the club's profile page.
+
+      - name: country_name
+        description: Country the club is based in, derived from the competition.
+
+      - name: confederation
+        description: Continental confederation the club belongs to (e.g. UEFA, CONMEBOL).
+
+      - name: is_top_5_league
+        description: >
+          Boolean flag indicating whether the club plays in one of the
+          top 5 European leagues (Premier League, La Liga, Bundesliga,
+          Serie A, Ligue 1).

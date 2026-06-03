@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: fct_clubs_performance
+    description: >
+      One row per club. Combines aggregated transfer activity across all seasons
+      from int_clubs_transfer_info with stadium attendance data from
+      int_clubs_attendance_summary. Transfer fee nulls (loans, free transfers)
+      are treated as 0. Attendance figures are club-level aggregates, not
+      season-specific.
+    config:
+      materialized: table
+    columns:
+      - name: club_id
+        description: Primary key. Unique identifier for the club.
+        tests:
+          - unique
+          - not_null
+
+      - name: number_of_seasons
+        description: >
+          Number of distinct seasons the club appears in the transfer data.
+
+      - name: total_players_acquired
+        description: >
+          Total number of players arriving at the club across all seasons,
+          including loans and free transfers.
+
+      - name: total_transfer_income
+        description: >
+          Sum of all transfer fees received by the club across all seasons.
+          Null fees (loans, free transfers) are counted as 0.
+
+      - name: avg_transfer_income_per_season
+        description: >
+          Average transfer income per season.
+          Calculated as total_transfer_income / number_of_seasons.
+
+      - name: total_players_sold
+        description: >
+          Total number of players leaving the club across all seasons,
+          including loans and free transfers.
+
+      - name: total_transfer_spend
+        description: >
+          Sum of all transfer fees paid by the club across all seasons.
+          Null fees (loans, free transfers) are counted as 0.
+
+      - name: avg_transfer_spend_per_season
+        description: >
+          Average transfer spend per season.
+          Calculated as total_transfer_spend / number_of_seasons.
+
+      - name: net_transfer_balance
+        description: >
+          total_transfer_income minus total_transfer_spend across all seasons.
+          Positive means the club has earned more than it spent on transfers;
+          negative means the opposite.
+
+      - name: avg_profit_loss_per_season
+        description: >
+          Average profit or loss per season.
+          Calculated as net_transfer_balance / number_of_seasons.
+          Positive means the club earned more than it spent on average;
+          negative means the opposite.
+
+      - name: total_home_games
+        description: >
+          Total number of distinct home league games played by the club
+          where attendance data is available.
+
+      - name: avg_attendance
+        description: >
+          Average attendance per home league game across all available data.
+          Rounded to the nearest integer.
+
+      - name: stadium_seats
+        description: Total seating capacity of the club's home stadium.
+
+      - name: avg_attendance_pct
+        description: >
+          Average attendance as a percentage of stadium capacity.
+          Rounded to 2 decimal places. Null if stadium_seats is 0 or null.

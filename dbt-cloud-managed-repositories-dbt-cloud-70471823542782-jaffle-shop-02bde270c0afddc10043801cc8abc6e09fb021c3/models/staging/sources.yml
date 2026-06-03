@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: transfermarkt
+    database: RAW
+    schema: TRANSFERMARKT
+    tables:
+      - name: appearances
+      - name: clubs
+      - name: club_games
+      - name: competitions
+      - name: games
+      - name: game_events
+      - name: game_lineups
+      - name: players
+      - name: player_valuations
+      - name: transfers
